@@ -1,0 +1,28 @@
+{
+  "name": "celina-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Public read-only REST API for Celina SDK tools on Celo mainnet",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev public --compatibility-date=2026-08-19 --compatibility-flag=nodejs_compat",
+    "build:functions": "wrangler pages functions build --compatibility-date=2026-08-19 --compatibility-flag=nodejs_compat",
+    "test": "vitest run",
+    "docs:tools": "node --import tsx scripts/generate-tools-docs.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@andrewkimjoseph/celina-sdk": "0.25.6",
+    "hono": "^4.9.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260815.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.28.0"
+  }
+}
