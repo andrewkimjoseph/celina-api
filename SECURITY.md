@@ -1,6 +1,6 @@
 # Security — Celina API
 
-Suggested production host: [https://api.usecelina.xyz](https://api.usecelina.xyz) (set this on your Pages project).
+Suggested production host: [https://api.usecelina.xyz](https://api.usecelina.xyz) (attach on the Cloudflare Worker).
 
 ## Deployment profile
 
@@ -24,7 +24,7 @@ This API is a **public, read-only** HTTP surface over the Celina SDK tool catalo
 
 ## Abuse mitigations
 
-- Cloudflare Pages/Workers CPU, duration, and concurrency limits
+- Cloudflare Workers CPU, duration, and concurrency limits
 - RPC provider rate limits on `CELINA_RPC_URL`
 - Read-only catalog — no token sends or signed writes
 

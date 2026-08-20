@@ -5,8 +5,8 @@
   "description": "Public read-only REST API for Celina SDK tools on Celo mainnet",
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev public --compatibility-date=2026-08-19 --compatibility-flag=nodejs_compat",
-    "build:functions": "wrangler pages functions build --compatibility-date=2026-08-19 --compatibility-flag=nodejs_compat",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
     "test": "vitest run",
     "docs:tools": "node --import tsx scripts/generate-tools-docs.ts",
     "typecheck": "tsc --noEmit"
