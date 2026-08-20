@@ -83,7 +83,7 @@ Replace the host with your `workers.dev` URL or custom domain:
 ```bash
 curl -sS https://api.usecelina.xyz/health
 
-curl -sS https://api.usecelina.xyz/v1/tools/get_network_status \
+curl -sS https://api.usecelina.xyz/v1/get_network_status \
   -H 'Content-Type: application/json' \
   -d '{}'
 ```
@@ -92,13 +92,13 @@ Expected: `{ "ok": true, "service": "celina-api" }` and a JSON object with `chai
 
 ## Invoke tools (reminder)
 
-- `GET /v1/tools/:name` — tool **metadata** (name, description, inputs)
-- `POST /v1/tools/:name` — run the tool and get chain data
+- `GET /v1/:name` — tool **metadata** (name, description, inputs)
+- `POST /v1/:name` — run the tool and get chain data
 
 Example:
 
 ```bash
-curl -sS https://api.usecelina.xyz/v1/tools/get_latest_blocks \
+curl -sS https://api.usecelina.xyz/v1/get_latest_blocks \
   -H 'Content-Type: application/json' \
   -d '{"count":"5"}'
 ```

@@ -2,7 +2,7 @@
 
 Generated from the Celina SDK catalog with the public read-only filter (`families: ["read"]`, no server keys, no Self sessions, no `estimate_*`). Re-run `npm run docs:tools` after bumping `@andrewkimjoseph/celina-sdk`.
 
-Currently **48** tools. Live list: `GET /v1/tools`. Invoke with `POST /v1/tools/<name>` using snake_case JSON keys.
+Currently **48** tools. Live list: `GET /v1/tools`. Invoke with `POST /v1/<name>` using snake_case JSON keys.
 
 ## `get_network_status`
 

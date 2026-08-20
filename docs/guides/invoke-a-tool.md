@@ -1,11 +1,11 @@
 # Invoke a tool
 
 1. Find the name in `GET /v1/tools` or [Tools](../reference/tools.md).
-2. `POST /v1/tools/<name>` with `Content-Type: application/json`.
+2. `POST /v1/<name>` with `Content-Type: application/json`.
 3. Body must be a JSON **object**. Use `{}` when the tool has no inputs.
 
 ```bash
-curl -sS https://api.usecelina.xyz/v1/tools/get_token_balance \
+curl -sS https://api.usecelina.xyz/v1/get_token_balance \
   -H 'Content-Type: application/json' \
   -d '{"address":"0xYourAddress","token":"USDm"}'
 ```

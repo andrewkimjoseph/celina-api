@@ -24,13 +24,13 @@ Suggested production host: `https://api.usecelina.xyz`
 |--------|------|---------|
 | GET | `/health` | `{ ok, service: "celina-api" }` |
 | GET | `/v1/tools` | List tools |
-| GET | `/v1/tools/:name` | One tool metadata |
-| POST | `/v1/tools/:name` | Invoke a read tool |
+| GET | `/v1/:name` | One tool metadata |
+| POST | `/v1/:name` | Invoke a read tool |
 
 `GET` returns schema; `POST` runs the tool. Example:
 
 ```bash
-curl -sS https://api.usecelina.xyz/v1/tools/get_stablecoin_balances \
+curl -sS https://api.usecelina.xyz/v1/get_stablecoin_balances \
   -H 'Content-Type: application/json' \
   -d '{"address":"0xYourAddress"}'
 ```

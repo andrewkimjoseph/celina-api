@@ -68,7 +68,7 @@ export function createApp(options?: {
     return c.json({ count: tools.length, tools });
   });
 
-  app.get("/v1/tools/:name", (c) => {
+  app.get("/v1/:name", (c) => {
     const definition = getPublicReadTool(c.req.param("name"));
     if (!definition) {
       return c.json({ error: `Unknown tool: ${c.req.param("name")}` }, 404);
@@ -76,7 +76,7 @@ export function createApp(options?: {
     return c.json(toolPublicMetadata(definition));
   });
 
-  app.post("/v1/tools/:name", async (c) => {
+  app.post("/v1/:name", async (c) => {
     const name = c.req.param("name");
     const definition = getPublicReadTool(name);
     if (!definition) {

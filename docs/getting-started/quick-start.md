@@ -21,7 +21,7 @@ curl -sS https://api.usecelina.xyz/v1/tools
 ## Invoke a tool
 
 ```bash
-curl -sS https://api.usecelina.xyz/v1/tools/get_stablecoin_balances \
+curl -sS https://api.usecelina.xyz/v1/get_stablecoin_balances \
   -H 'Content-Type: application/json' \
   -d '{"address":"0xYourAddress"}'
 ```
@@ -29,7 +29,7 @@ curl -sS https://api.usecelina.xyz/v1/tools/get_stablecoin_balances \
 Network status (no wallet):
 
 ```bash
-curl -sS https://api.usecelina.xyz/v1/tools/get_network_status \
+curl -sS https://api.usecelina.xyz/v1/get_network_status \
   -H 'Content-Type: application/json' \
   -d '{}'
 ```
@@ -37,7 +37,7 @@ curl -sS https://api.usecelina.xyz/v1/tools/get_network_status \
 Governance (name is not camelCase):
 
 ```bash
-curl -sS https://api.usecelina.xyz/v1/tools/get_actionable_governance_proposals \
+curl -sS https://api.usecelina.xyz/v1/get_actionable_governance_proposals \
   -H 'Content-Type: application/json' \
   -d '{}'
 ```

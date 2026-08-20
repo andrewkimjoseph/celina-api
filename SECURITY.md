@@ -19,7 +19,7 @@ This API is a **public, read-only** HTTP surface over the Celina SDK tool catalo
 | Exposure | Details |
 |----------|---------|
 | `GET /v1/tools` | Tool names, titles, descriptions, and input fields |
-| `POST /v1/tools/:name` | On-chain and HTTP reads via the SDK |
+| `POST /v1/:name` | On-chain and HTTP reads via the SDK |
 | Secrets | None |
 
 ## Abuse mitigations

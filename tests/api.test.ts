@@ -59,14 +59,14 @@ describe("HTTP surface", () => {
   });
 
   it("GET unknown tool is 404", async () => {
-    const res = await app.request("/v1/tools/send_token");
+    const res = await app.request("/v1/send_token");
     expect(res.status).toBe(404);
     const body = (await res.json()) as { error: string };
     expect(body.error).toContain("send_token");
   });
 
   it("POST unknown tool is 404", async () => {
-    const res = await app.request("/v1/tools/send_token", {
+    const res = await app.request("/v1/send_token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({}),
@@ -75,7 +75,7 @@ describe("HTTP surface", () => {
   });
 
   it("POST rejects invalid input", async () => {
-    const res = await app.request("/v1/tools/get_token_balance", {
+    const res = await app.request("/v1/get_token_balance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({}),
@@ -86,7 +86,7 @@ describe("HTTP surface", () => {
   });
 
   it("POST get_network_status returns chain data", async () => {
-    const res = await app.request("/v1/tools/get_network_status", {
+    const res = await app.request("/v1/get_network_status", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({}),
