@@ -31,8 +31,8 @@ Fetch the most recent blocks on Celo mainnet.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `count` | string | no | count |
-| `offset` | string | no | offset |
+| `count` | number | no | count |
+| `offset` | number | no | offset |
 
 ## `get_transaction`
 
@@ -239,12 +239,12 @@ Returns Celo governance proposals with pagination. Set include_metadata=false fo
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `include_inactive` | string | yes | include inactive |
-| `include_metadata` | string | yes | include metadata |
-| `page` | string | no | page |
-| `page_size` | string | no | page size |
-| `offset` | string | no | offset |
-| `limit` | string | no | limit |
+| `include_inactive` | boolean | no | include inactive |
+| `include_metadata` | boolean | no | include metadata |
+| `page` | number | no | page |
+| `page_size` | number | no | page size |
+| `offset` | number | no | offset |
+| `limit` | number | no | limit |
 
 ## `get_proposal_details`
 
@@ -254,7 +254,7 @@ Returns detailed information about a Celo governance proposal.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `proposal_id` | string | yes | proposal id |
+| `proposal_id` | number | yes | proposal id |
 
 ## `get_locked_celo_balance`
 
@@ -309,7 +309,7 @@ Referendum votes and queue upvotes cast by an address on Celo governance.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `address` | string | yes | Wallet on Celo mainnet (0x address). |
-| `proposal_id` | string | no | proposal id |
+| `proposal_id` | number | no | proposal id |
 
 ## `check_humanness`
 
@@ -349,10 +349,10 @@ Paginated validator groups with votes, capacity, and member counts.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `page` | string | no | page |
-| `page_size` | string | no | page size |
-| `offset` | string | no | offset |
-| `limit` | string | no | limit |
+| `page` | number | no | page |
+| `page_size` | number | no | page size |
+| `offset` | number | no | offset |
+| `limit` | number | no | limit |
 
 ## `get_validator_group_details`
 
@@ -403,7 +403,7 @@ Curated Celo Mondo governance delegate directory (name, address, interests, desc
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `search` | string | no | Filter by name, address, interests, or description |
-| `limit` | string | no | limit |
+| `limit` | number | no | limit |
 | `offset` | number | no | offset |
 | `include_stats` | boolean | no | Include on-chain LockedGold stats (default true) |
 
@@ -463,9 +463,9 @@ Verify whether an agent address is backed by a real human on Self Agent ID (Celo
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `agent_address` | string | yes | agent address |
-| `require_age` | string | yes | require age |
-| `require_ofac` | string | yes | require ofac |
-| `require_self_provider` | string | yes | require self provider |
+| `require_age` | string | no | require age |
+| `require_ofac` | boolean | no | require ofac |
+| `require_self_provider` | boolean | no | require self provider |
 
 ## `lookup_self_agent`
 
@@ -475,7 +475,7 @@ Look up a Self Agent ID by numeric on-chain ID. Returns credentials with ofac_cl
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `agent_id` | string | yes | agent id |
+| `agent_id` | number | yes | agent id |
 
 ## `verify_self_request`
 
@@ -488,10 +488,10 @@ Verify incoming HTTP request headers signed by a Self Agent (not file system acc
 | `agent_signature` | string | yes | agent signature |
 | `agent_timestamp` | string | yes | agent timestamp |
 | `method` | string | yes | method |
-| `request_path` | string | yes | request path |
-| `body` | string | yes | body |
-| `keytype` | string | yes | keytype |
-| `agent_key` | string | yes | agent key |
+| `request_path` | string | yes | HTTP request path or URL path+query that was signed — not a filesystem path. |
+| `body` | string | no | body |
+| `keytype` | string | no | keytype |
+| `agent_key` | string | no | agent key |
 
 ## `get_agentkarma_reputation`
 
@@ -502,7 +502,7 @@ Read AgentKarma Provider + Consumer reputation for a Celo agent wallet (read-onl
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `address` | string | yes | Celo 0x address of the agent/counterparty to look up. |
-| `face` | string | yes | Karma face to read: provider, consumer, or both (default). |
+| `face` | string | no | Karma face to read: provider, consumer, or both (default). |
 
 ## `get_agentkarma_celo_agent`
 
@@ -512,7 +512,7 @@ Resolve a Celo ERC-8004 agent (identity + reputation) by numeric agent ID via Ag
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `agent_id` | string | yes | ERC-8004 agent ID on Celo. |
+| `agent_id` | number | yes | ERC-8004 agent ID on Celo. |
 
 ## `check_agentkarma_counterparty`
 
@@ -523,6 +523,6 @@ Evaluate a Celo counterparty against a local AgentKarma trust policy (min score,
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `address` | string | yes | Celo 0x address of the agent/counterparty to look up. |
-| `face` | string | yes | Face to score the decision on (default provider). |
-| `min_score` | string | yes | Reject when the face score is below this (0–100). |
-| `require_receipt_backed` | string | yes | Require at least one Tier-1 receipt-backed signal on the face. |
+| `face` | string | no | Face to score the decision on (default provider). |
+| `min_score` | number | no | Reject when the face score is below this (0–100). |
+| `require_receipt_backed` | boolean | no | Require at least one Tier-1 receipt-backed signal on the face. |
