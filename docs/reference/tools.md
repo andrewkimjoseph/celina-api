@@ -288,7 +288,7 @@ No input fields. Send `{}` or an empty JSON object.
 
 Get Queued Proposals
 
-Governance proposals currently in Queue with upvote weight. Fast on-chain read — use get_proposal_details for CGP title and markdown.
+Governance proposals currently in Queue with upvote weight. Includes dequeueReady and upvoteable flags — when dequeue is overdue, top proposals are not upvoteable until execute_dequeue_proposals_if_ready. Use get_proposal_details for CGP title and markdown.
 
 No input fields. Send `{}` or an empty JSON object.
 
@@ -296,7 +296,7 @@ No input fields. Send `{}` or an empty JSON object.
 
 Get Actionable Governance Proposals
 
-Queued and Referendum proposals you can act on now (upvote or vote). Fast on-chain read — use get_proposal_details on a proposal_id before governing.
+Queued and Referendum proposals you can act on now (upvote or vote). When dequeueReady, queued items may have upvoteable=false — call execute_dequeue_proposals_if_ready first. Use get_proposal_details on a proposal_id before governing.
 
 No input fields. Send `{}` or an empty JSON object.
 
