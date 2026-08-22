@@ -18,7 +18,7 @@ npm run dev
 `wrangler dev` serves the Hono Worker (typically `http://localhost:8788`). Optional `.dev.vars`:
 
 ```bash
-CELINA_RPC_URL=https://forno.celo.org
+CELO_RPC_URL=https://forno.celo.org
 ETH_RPC_URL_MAINNET=https://ethereum.publicnode.com
 ```
 

@@ -18,7 +18,7 @@ function resolveWallet(input?: WalletInput): `0x${string}` {
 
 export function createApiRuntime(env: ApiEnv = {}): ToolRuntime {
   const celina = createCelinaClient({
-    rpcUrl: env.CELINA_RPC_URL || DEFAULT_RPC_URL,
+    rpcUrl: env.CELO_RPC_URL || DEFAULT_RPC_URL,
     ethRpcUrl: env.ETH_RPC_URL_MAINNET,
     analyticsEnabled: false,
     analyticsDeviceId: "celina_api",

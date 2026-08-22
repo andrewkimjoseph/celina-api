@@ -25,7 +25,7 @@ This API is a **public, read-only** HTTP surface over the Celina SDK tool catalo
 ## Abuse mitigations
 
 - Cloudflare Workers CPU, duration, and concurrency limits
-- RPC provider rate limits on `CELINA_RPC_URL`
+- RPC provider rate limits on `CELO_RPC_URL`
 - Read-only catalog — no token sends or signed writes
 
 ## Reporting

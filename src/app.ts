@@ -13,7 +13,7 @@ let cachedRuntime: ToolRuntime | undefined;
 let cachedRuntimeKey: string | undefined;
 
 function runtimeKey(env: ApiEnv): string {
-  return `${env.CELINA_RPC_URL ?? ""}|${env.ETH_RPC_URL_MAINNET ?? ""}`;
+  return `${env.CELO_RPC_URL ?? ""}|${env.ETH_RPC_URL_MAINNET ?? ""}`;
 }
 
 function getRuntime(env: ApiEnv): ToolRuntime {

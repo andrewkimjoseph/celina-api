@@ -1,5 +1,5 @@
 export type ApiEnv = {
-  CELINA_RPC_URL?: string;
+  CELO_RPC_URL?: string;
   ETH_RPC_URL_MAINNET?: string;
 };
 

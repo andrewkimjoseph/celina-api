@@ -20,7 +20,7 @@ Set in the Cloudflare dashboard (**Workers & Pages → celina-api → Settings �
 
 | Variable | Required | Notes |
 |----------|----------|-------|
-| `CELINA_RPC_URL` | Optional | Celo mainnet RPC (default: Forno) |
+| `CELO_RPC_URL` | Optional | Celo mainnet RPC (default: Forno) |
 | `ETH_RPC_URL_MAINNET` | Optional | Ethereum RPC for ENS |
 
 Do **not** set `CELO_PRIVATE_KEY` or `SELF_AGENT_PRIVATE_KEY`. This Worker is read-only.
@@ -36,7 +36,7 @@ Wrangler loads `.dev.vars` automatically for `npm run dev`.
 **CLI (production):**
 
 ```bash
-npx wrangler secret put CELINA_RPC_URL          # if using a private RPC
+npx wrangler secret put CELO_RPC_URL          # if using a private RPC
 npx wrangler vars put ETH_RPC_URL_MAINNET "https://ethereum.publicnode.com"
 ```
 
