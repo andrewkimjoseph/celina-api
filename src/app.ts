@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { drainCelinaAnalytics } from "@andrewkimjoseph/celina-sdk";
 import type { ToolRuntime } from "@andrewkimjoseph/celina-sdk/tools";
 import { getPublicReadTool, getPublicReadToolDefinitions } from "./catalog.js";
 import type { ApiEnv } from "./env.js";
@@ -125,6 +126,11 @@ export function createApp(options?: {
         runtime,
         parsed.data as Record<string, unknown>,
       );
+      try {
+        c.executionCtx.waitUntil(drainCelinaAnalytics());
+      } catch {
+        // app.request() in tests has no Worker ExecutionContext
+      }
       return c.json(toJsonSafe(result));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
