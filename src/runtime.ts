@@ -20,7 +20,7 @@ export function createApiRuntime(env: ApiEnv = {}): ToolRuntime {
   const celina = createCelinaClient({
     rpcUrl: env.CELO_RPC_URL || DEFAULT_RPC_URL,
     ethRpcUrl: env.ETH_RPC_URL_MAINNET,
-    analyticsEnabled: false,
+    analyticsEnabled: true,
     analyticsDeviceId: "celina_api",
   });
 
