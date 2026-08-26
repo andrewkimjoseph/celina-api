@@ -4,7 +4,7 @@
 
 # Celina API
 
-Public **read-only** HTTP API for [Celina SDK](https://github.com/andrewkimjoseph/celina-sdk) tools on Celo mainnet. Same snake_case catalog as MCP (`get_actionable_governance_proposals`), no server keys, no `prepare_*` / `execute_*` / `estimate_*`.
+Celina is a third-party, open-source stack that gives an LLM read, prepare, and execute access to Celo mainnet through an SDK, an MCP server, and a REST API. This is the REST API — public and **read-only**, for [Celina SDK](https://github.com/andrewkimjoseph/celina-sdk) tools on Celo mainnet. Same snake_case catalog as MCP (`get_actionable_governance_proposals`), no server keys, no `prepare_*` / `execute_*` / `estimate_*`.
 
 Deployed as a **Cloudflare Worker** (Hono + `wrangler`).
 

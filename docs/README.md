@@ -4,7 +4,7 @@
 
 ## Celina API
 
-Public **read-only** REST API for Celo mainnet. It invokes the same Celina SDK **read** tools used by MCP — snake_case names like `get_actionable_governance_proposals` — without a private key on the server.
+Celina is a third-party, open-source stack that gives an LLM read, prepare, and execute access to Celo mainnet through an SDK, an MCP server, and a REST API. This is the REST API — public and **read-only** for Celo mainnet. It invokes the same Celina SDK **read** tools used by MCP — snake_case names like `get_actionable_governance_proposals` — without a private key on the server.
 
 | Layer | Role |
 |-------|------|
