@@ -15,7 +15,7 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "@andrewkimjoseph/celina-sdk": "0.25.23",
+    "@andrewkimjoseph/celina-sdk": "0.25.24",
     "hono": "^4.9.6"
   },
   "devDependencies": {
