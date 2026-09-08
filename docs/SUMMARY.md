@@ -16,6 +16,7 @@
 ## Guides
 
 * [Invoke a tool](guides/invoke-a-tool.md)
+* [Telemetry](guides/telemetry.md)
 
 ## Reference
 

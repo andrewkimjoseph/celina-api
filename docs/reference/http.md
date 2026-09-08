@@ -19,4 +19,4 @@ Unknown `:name` → **404**. Validation errors → **400**. Execution failures �
 | Header | Purpose |
 |--------|---------|
 | `Content-Type` | `application/json` on `POST /v1/:name` |
-| `X-Celina-Client` | Optional telemetry `device_id` override (sanitized; default `celina_api`). See [Invoke a tool](../guides/invoke-a-tool.md#telemetry). |
+| `X-Celina-Client` | Optional telemetry `device_id` override (sanitized; default `celina_api`). See [Telemetry](../guides/telemetry.md). |

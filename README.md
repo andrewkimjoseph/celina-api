@@ -12,6 +12,7 @@ Deployed as a **Cloudflare Worker** (Hono + `wrangler`).
 
 - [Quick start](docs/getting-started/quick-start.md)
 - [HTTP reference](docs/reference/http.md)
+- [Telemetry](docs/guides/telemetry.md)
 - [Tool list](docs/reference/tools.md)
 - [Read-only surface](docs/concepts/read-only.md)
 - [Deploy](DEPLOY.md)
@@ -20,7 +21,7 @@ Suggested production host: `https://api.usecelina.xyz`
 
 ## Telemetry
 
-Read invocations report usage to [celina-stats-api](https://api.stats.usecelina.xyz) via the SDK (`POST /events`). Default `device_id` is `celina_api`. Pass `X-Celina-Client` to override it (sanitized, max 40 characters) — this is how celina-bot appears as `celina_bot`. See [Invoke a tool](docs/guides/invoke-a-tool.md) and the [SDK Telemetry guide](https://andrewkimjoseph.gitbook.io/celina-sdk/guides/telemetry).
+Read invocations report usage to [celina-stats-api](https://api.stats.usecelina.xyz) via the SDK (`POST /events`). Default `device_id` is `celina_api`. Pass `X-Celina-Client` to override it (sanitized, max 40 characters) — this is how celina-bot appears as `celina_bot`. See [Telemetry](docs/guides/telemetry.md).
 
 ## Endpoints
 
