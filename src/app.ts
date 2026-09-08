@@ -4,6 +4,14 @@ import { drainCelinaAnalytics } from "@andrewkimjoseph/celina-sdk";
 import type { ToolRuntime } from "@andrewkimjoseph/celina-sdk/tools";
 import { getPublicReadTool, getPublicReadToolDefinitions } from "./catalog.js";
 import type { ApiEnv } from "./env.js";
+import {
+  offchainErrorMessage,
+  readOffchainDaily,
+  readOffchainDevices,
+  readOffchainSync,
+  readOffchainTools,
+  readOffchainWallets,
+} from "./offchain.js";
 import { createApiRuntime, sanitizeClientDeviceId } from "./runtime.js";
 import { toJsonSafe } from "./serialize.js";
 import { toolPublicMetadata } from "./tool-metadata.js";
@@ -48,6 +56,11 @@ export function createApp(options?: {
 }): Hono<AppBindings> {
   const app = new Hono<AppBindings>();
 
+  const envFor = (c: { env: ApiEnv }): ApiEnv => ({
+    ...options?.env,
+    ...c.env,
+  });
+
   app.use("*", cors());
 
   app.get("/", (c) =>
@@ -64,6 +77,46 @@ export function createApp(options?: {
       service: "celina-api",
     }),
   );
+
+  app.get("/offchain/daily", async (c) => {
+    try {
+      return c.json(await readOffchainDaily(envFor(c)));
+    } catch (error) {
+      return c.json({ error: offchainErrorMessage(error) }, 502);
+    }
+  });
+
+  app.get("/offchain/wallets", async (c) => {
+    try {
+      return c.json(await readOffchainWallets(envFor(c)));
+    } catch (error) {
+      return c.json({ error: offchainErrorMessage(error) }, 502);
+    }
+  });
+
+  app.get("/offchain/tools", async (c) => {
+    try {
+      return c.json(await readOffchainTools(envFor(c)));
+    } catch (error) {
+      return c.json({ error: offchainErrorMessage(error) }, 502);
+    }
+  });
+
+  app.get("/offchain/devices", async (c) => {
+    try {
+      return c.json(await readOffchainDevices(envFor(c)));
+    } catch (error) {
+      return c.json({ error: offchainErrorMessage(error) }, 502);
+    }
+  });
+
+  app.get("/offchain/sync", async (c) => {
+    try {
+      return c.json(await readOffchainSync(envFor(c)));
+    } catch (error) {
+      return c.json({ error: offchainErrorMessage(error) }, 502);
+    }
+  });
 
   app.get("/v1/tools", (c) => {
     const tools = getPublicReadToolDefinitions().map(toolPublicMetadata);
@@ -124,7 +177,7 @@ export function createApp(options?: {
     );
     const runtime =
       options?.runtime ??
-      getRuntime({ ...options?.env, ...c.env }, analyticsDeviceId);
+      getRuntime(envFor(c), analyticsDeviceId);
 
     try {
       const result = await definition.handler(

@@ -136,3 +136,139 @@ describe("sanitizeClientDeviceId", () => {
     expect(sanitizeClientDeviceId("a".repeat(50))).toBe("a".repeat(40));
   });
 });
+
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+const supabaseEnv = {
+  SUPABASE_URL: "https://example.supabase.co",
+  SUPABASE_SERVICE_ROLE_KEY: "service-role-test-key",
+};
+
+describe("GET /offchain/*", () => {
+  const app = createApp({ env: supabaseEnv });
+
+  it("GET /offchain/daily aggregates rows", async () => {
+    const fetchMock = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      expect(url).toBe("https://example.supabase.co/rest/v1/rpc/offchain_daily");
+      expect(init?.method).toBe("POST");
+      const body = JSON.parse(String(init?.body ?? "{}")) as { since_day: string };
+      expect(body.since_day).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      return jsonResponse([
+        { day: "2026-09-01", count: 2 },
+        { day: "2026-09-02", count: 3 },
+      ]);
+    };
+    const original = globalThis.fetch;
+    globalThis.fetch = fetchMock as typeof fetch;
+    try {
+      const res = await app.request("/offchain/daily");
+      expect(res.status).toBe(200);
+      await expect(res.json()).resolves.toEqual({
+        rows: [
+          { day: "2026-09-01", count: 2 },
+          { day: "2026-09-02", count: 3 },
+        ],
+        total: 5,
+      });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("GET /offchain/wallets returns daily and total", async () => {
+    const fetchMock = async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("/rest/v1/rpc/offchain_wallets_daily")) {
+        return jsonResponse([{ day: "2026-09-01", count: 1 }]);
+      }
+      if (url.endsWith("/rest/v1/rpc/offchain_wallets_total")) {
+        return jsonResponse(4);
+      }
+      throw new Error(`unexpected fetch ${url}`);
+    };
+    const original = globalThis.fetch;
+    globalThis.fetch = fetchMock as typeof fetch;
+    try {
+      const res = await app.request("/offchain/wallets");
+      expect(res.status).toBe(200);
+      await expect(res.json()).resolves.toEqual({
+        daily: [{ day: "2026-09-01", count: 1 }],
+        total: 4,
+      });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("GET /offchain/tools returns per-event counts", async () => {
+    const fetchMock = async (input: RequestInfo | URL) => {
+      expect(String(input)).toBe(
+        "https://example.supabase.co/rest/v1/rpc/offchain_tools",
+      );
+      return jsonResponse([{ event: "get_network_status", count: 9 }]);
+    };
+    const original = globalThis.fetch;
+    globalThis.fetch = fetchMock as typeof fetch;
+    try {
+      const res = await app.request("/offchain/tools");
+      expect(res.status).toBe(200);
+      await expect(res.json()).resolves.toEqual({
+        rows: [{ event: "get_network_status", count: 9 }],
+      });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("GET /offchain/devices returns uniqueDevices", async () => {
+    const fetchMock = async (input: RequestInfo | URL) => {
+      expect(String(input)).toBe(
+        "https://example.supabase.co/rest/v1/rpc/offchain_devices",
+      );
+      return jsonResponse(22);
+    };
+    const original = globalThis.fetch;
+    globalThis.fetch = fetchMock as typeof fetch;
+    try {
+      const res = await app.request("/offchain/devices");
+      expect(res.status).toBe(200);
+      await expect(res.json()).resolves.toEqual({ uniqueDevices: 22 });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("GET /offchain/sync returns lastSyncedAt", async () => {
+    const fetchMock = async (input: RequestInfo | URL) => {
+      expect(String(input)).toContain(
+        "/rest/v1/amplitude_sync_state?select=last_synced_at&id=eq.1",
+      );
+      return jsonResponse([{ last_synced_at: "2026-09-08T00:00:00.000Z" }]);
+    };
+    const original = globalThis.fetch;
+    globalThis.fetch = fetchMock as typeof fetch;
+    try {
+      const res = await app.request("/offchain/sync");
+      expect(res.status).toBe(200);
+      await expect(res.json()).resolves.toEqual({
+        lastSyncedAt: "2026-09-08T00:00:00.000Z",
+      });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("GET /offchain/daily is 502 when Supabase is not configured", async () => {
+    const bare = createApp();
+    const res = await bare.request("/offchain/daily");
+    expect(res.status).toBe(502);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toMatch(/SUPABASE_/);
+  });
+});

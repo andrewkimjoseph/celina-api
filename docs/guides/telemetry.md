@@ -33,3 +33,21 @@ The Celina ecosystem device-id table (`celina-*` packages plus celeste-ai) lives
 ## Delivery
 
 Tracking is fire-and-forget so it does not add latency to the tool response. The Worker keeps the isolate alive with `waitUntil(drainCelinaAnalytics())` after each successful or failed `POST /v1/:name`.
+
+## Off-chain stats
+
+`GET /offchain/*` are **read-aggregates** over already-ingested events in `amplitude_events` (90-day window). They are not tool invocations and do not emit telemetry.
+
+Ingest still belongs to [celina-stats-api](https://github.com/andrewkimjoseph/celina-stats-api): SDK `POST /events` plus the daily Amplitude export cron. This API only queries the same Supabase project.
+
+| Method | Path | Body |
+|--------|------|------|
+| GET | `/offchain/daily` | `{ rows: [{ day, count }], total }` |
+| GET | `/offchain/wallets` | `{ daily: [{ day, count }], total }` — distinct valid `0x` `user_id` |
+| GET | `/offchain/tools` | `{ rows: [{ event, count }] }` |
+| GET | `/offchain/devices` | `{ uniqueDevices }` — excludes empty ids and `celina-sdk` / `andrewkimjoseph_celina_sdk` |
+| GET | `/offchain/sync` | `{ lastSyncedAt }` — Amplitude export cursor |
+
+```bash
+curl -sS https://api.usecelina.xyz/offchain/daily
+```

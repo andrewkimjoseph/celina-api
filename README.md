@@ -21,13 +21,18 @@ Suggested production host: `https://api.usecelina.xyz`
 
 ## Telemetry
 
-Read invocations report usage to [celina-stats-api](https://api.stats.usecelina.xyz) via the SDK (`POST /events`). Default `device_id` is `celina_api`. Pass `X-Celina-Client` to override it (sanitized, max 40 characters) — this is how celina-bot appears as `celina_bot`. See [Telemetry](docs/guides/telemetry.md).
+Read invocations report usage to [celina-stats-api](https://api.stats.usecelina.xyz) via the SDK (`POST /events`). Default `device_id` is `celina_api`. Pass `X-Celina-Client` to override it (sanitized, max 40 characters) — this is how celina-bot appears as `celina_bot`. Off-chain dashboard aggregates are `GET /offchain/*` (computed here from `amplitude_events`). See [Telemetry](docs/guides/telemetry.md).
 
 ## Endpoints
 
 | Method | Path | Purpose |
 |--------|------|---------|
 | GET | `/health` | `{ ok, service: "celina-api" }` |
+| GET | `/offchain/daily` | `{ rows: [{ day, count }], total }` — event counts (90 days) |
+| GET | `/offchain/wallets` | `{ daily: [{ day, count }], total }` — distinct `0x` wallets (90 days) |
+| GET | `/offchain/tools` | `{ rows: [{ event, count }] }` — per-tool counts (90 days) |
+| GET | `/offchain/devices` | `{ uniqueDevices }` — distinct `device_id` (90 days) |
+| GET | `/offchain/sync` | `{ lastSyncedAt }` — Amplitude export cursor |
 | GET | `/v1/tools` | List tools |
 | GET | `/v1/:name` | One tool metadata |
 | POST | `/v1/:name` | Invoke a read tool |

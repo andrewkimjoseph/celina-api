@@ -1,6 +1,6 @@
 {
   "name": "celina-api",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "Public read-only REST API for Celina SDK tools on Celo mainnet",
   "type": "module",
