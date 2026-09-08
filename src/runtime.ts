@@ -2,13 +2,13 @@ import { createCelinaClient, DEFAULT_RPC_URL } from "@andrewkimjoseph/celina-sdk
 import type { ToolRuntime, WalletInput } from "@andrewkimjoseph/celina-sdk/tools";
 import type { ApiEnv } from "./env.js";
 
-/** Amplitude `device_id` when `X-Celina-Client` is absent or invalid. */
+/** Telemetry `device_id` when `X-Celina-Client` is absent or invalid. */
 export const DEFAULT_ANALYTICS_DEVICE_ID = "celina_api";
 
 const MAX_DEVICE_ID_LENGTH = 40;
 
 /**
- * Sanitize a caller-supplied Amplitude device id.
+ * Sanitize a caller-supplied telemetry device id.
  * Lowercases, maps non `[a-z0-9_]` to `_`, caps length, falls back to `celina_api`.
  */
 export function sanitizeClientDeviceId(raw?: string | null): string {

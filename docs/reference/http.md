@@ -13,3 +13,10 @@ Base URL: see [Base URL](../getting-started/base-url.md).
 `:name` is the catalog tool name (`get_network_status`, not a REST resource id).
 
 Unknown `:name` → **404**. Validation errors → **400**. Execution failures → **502**. See [Errors](../getting-started/errors.md).
+
+## Headers
+
+| Header | Purpose |
+|--------|---------|
+| `Content-Type` | `application/json` on `POST /v1/:name` |
+| `X-Celina-Client` | Optional telemetry `device_id` override (sanitized; default `celina_api`). See [Invoke a tool](../guides/invoke-a-tool.md#telemetry). |

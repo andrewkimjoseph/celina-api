@@ -21,3 +21,11 @@ Browser `fetch` from any origin is allowed.
 ## Quotes
 
 Mento, Uniswap, and GoodDollar reserve quote tools do not require a wallet. Do not send `from` unless the schema asks for it.
+
+## Telemetry
+
+Successful **read** invocations are reported to [celina-stats-api](https://api.stats.usecelina.xyz) (`POST /events`) via the bundled Celina SDK — not Amplitude-direct. Default `device_id` is `celina_api`.
+
+Send optional `X-Celina-Client` (sanitized to `[a-z0-9_]`, max 40 characters) to override it. This is how [celina-bot](https://github.com/andrewkimjoseph/celina-bot) shows up as `celina_bot`. Invalid or missing values fall back to `celina_api`.
+
+Wallet-scoped tools set telemetry `user_id` to the address in the JSON body (`address` / `wallet_address` / `from`). See the [SDK Telemetry guide](https://andrewkimjoseph.gitbook.io/celina-sdk/guides/telemetry).
