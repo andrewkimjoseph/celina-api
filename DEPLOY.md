@@ -1,22 +1,24 @@
 # Deploy — Celina API (Cloudflare Workers)
 
-Manual deploy guide for the read-only Celina API Worker. This repo does not auto-deploy from CI.
+Git-connected Cloudflare Workers Builds deploy this repo. Do **not** run `wrangler deploy` / `wrangler secret put` from a machine whose Wrangler CLI is tied to a different Cloudflare account.
 
 ## Prerequisites
 
-- [Cloudflare](https://dash.cloudflare.com) account
-- Node.js ≥ 20
-- Repo cloned: [andrewkimjoseph/celina-api](https://github.com/andrewkimjoseph/celina-api)
+- [Cloudflare](https://dash.cloudflare.com) account that should own `celina-api`
+- Node.js ≥ 20 (local tests / `wrangler dev` only)
+- Repo: [andrewkimjoseph/celina-api](https://github.com/andrewkimjoseph/celina-api)
 
 ```bash
 cd celina-api
 npm install
-npx wrangler login
+cp .env.example .dev.vars   # local only
+npm test
+npm run dev                 # optional — http://localhost:8788
 ```
 
 ## Environment variables
 
-Set in the Cloudflare dashboard (**Workers & Pages → celina-api → Settings → Variables**) or via Wrangler.
+Set in the Cloudflare dashboard (**Workers & Pages → celina-api → Settings → Variables and Secrets**).
 
 | Variable | Required | Notes |
 |----------|----------|-------|
@@ -27,50 +29,7 @@ Set in the Cloudflare dashboard (**Workers & Pages → celina-api → Settings �
 
 Do **not** set `CELO_PRIVATE_KEY` or `SELF_AGENT_PRIVATE_KEY`. This Worker is read-only.
 
-**Local dev** — copy [`.env.example`](.env.example) to `.dev.vars`:
-
-```bash
-cp .env.example .dev.vars
-```
-
 Wrangler loads `.dev.vars` automatically for `npm run dev`.
-
-**CLI (production):**
-
-```bash
-npx wrangler secret put CELO_RPC_URL          # if using a private RPC
-npx wrangler vars put ETH_RPC_URL_MAINNET "https://ethereum.publicnode.com"
-npx wrangler secret put SUPABASE_URL
-npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-```
-
-## Local dev
-
-```bash
-npm install
-npm test
-npm run dev
-```
-
-Default URL: `http://localhost:8788`
-
-## Deploy
-
-From the repo root:
-
-```bash
-npm run deploy
-```
-
-Or:
-
-```bash
-npx wrangler deploy
-```
-
-Wrangler uses [`wrangler.jsonc`](wrangler.jsonc): `main` → `src/index.ts`, `nodejs_compat` enabled.
-
-After deploy, Wrangler prints a `*.workers.dev` URL.
 
 ## Custom domain
 
@@ -78,11 +37,9 @@ Suggested production host: **https://api.usecelina.xyz**
 
 1. Open the Worker in the Cloudflare dashboard
 2. **Settings → Domains & Routes → Add Custom Domain**
-3. Enter `api.usecelina.xyz` (DNS must be on Cloudflare or add the CNAME Wrangler suggests)
+3. Enter `api.usecelina.xyz`
 
 ## Smoke test
-
-Replace the host with your `workers.dev` URL or custom domain:
 
 ```bash
 curl -sS https://api.usecelina.xyz/health
@@ -113,5 +70,5 @@ curl -sS https://api.usecelina.xyz/v1/get_latest_blocks \
 
 - **Worker fails to start after deploy** — ensure `@andrewkimjoseph/celina-sdk` is ≥ 0.25.7 (Worker-safe bundles; no `createRequire`).
 - **502 on tool calls** — check RPC URL and Cloudflare Worker logs (Observability).
-- **502 on `GET /offchain/*`** — set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (same project as celina-stats-api).
+- **502 on `GET /offchain/*`** — set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the dashboard (same project as celina-stats-api).
 - **Bundle size** — large SDK deps; stay on published npm SDK, not `file:` links.

@@ -58,11 +58,7 @@ Requires Node.js ≥ 20. Depends on published `@andrewkimjoseph/celina-sdk` (exa
 
 ## Deploy
 
-Manual Cloudflare Workers deploy — see **[DEPLOY.md](DEPLOY.md)** for `wrangler login`, variables, custom domain, and smoke tests.
-
-```bash
-npm run deploy
-```
+Git-connected Cloudflare Workers Builds — see **[DEPLOY.md](DEPLOY.md)** for dashboard variables, custom domain, and smoke tests. Do not `wrangler deploy` from a different Cloudflare account.
 
 ## Docs for GitBook
 
