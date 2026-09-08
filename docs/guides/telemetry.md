@@ -36,13 +36,13 @@ Tracking is fire-and-forget so it does not add latency to the tool response. The
 
 ## Off-chain stats
 
-`GET /offchain/*` are **read-aggregates** over already-ingested events in `amplitude_events` (90-day window). They are not tool invocations and do not emit telemetry.
+`GET /offchain/*` are **read-aggregates** over already-ingested events in `amplitude_events`. Daily / wallets / tools / devices use a **90-day window**. `GET /offchain/daily` `total` is **all-time** (`COUNT(*)` on `amplitude_events`), not the sum of the 90-day rows. They are not tool invocations and do not emit telemetry.
 
 Ingest still belongs to [celina-stats-api](https://github.com/andrewkimjoseph/celina-stats-api): SDK `POST /events` plus the daily Amplitude export cron. This API only queries the same Supabase project.
 
 | Method | Path | Body |
 |--------|------|------|
-| GET | `/offchain/daily` | `{ rows: [{ day, count }], total }` |
+| GET | `/offchain/daily` | `{ rows: [{ day, count }], total }` — `rows` last 90 days; `total` all-time |
 | GET | `/offchain/wallets` | `{ daily: [{ day, count }], total }` — distinct valid `0x` `user_id` |
 | GET | `/offchain/tools` | `{ rows: [{ event, count }] }` |
 | GET | `/offchain/devices` | `{ uniqueDevices }` — excludes empty ids and `celina-sdk` / `andrewkimjoseph_celina_sdk` |

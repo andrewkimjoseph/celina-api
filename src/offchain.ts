@@ -34,13 +34,19 @@ function asDay(value: string): string {
 export async function readOffchainDaily(
   env: ApiEnv,
 ): Promise<{ rows: OffchainDayCount[]; total: number }> {
-  const rows = (
-    await sbRpc<RpcDayRow[]>(env, "offchain_daily", {
+  const [dailyRows, total] = await Promise.all([
+    sbRpc<RpcDayRow[]>(env, "offchain_daily", {
       since_day: sinceDay(),
-    })
-  ).map((row) => ({ day: asDay(row.day), count: asCount(row.count) }));
-  const total = rows.reduce((sum, row) => sum + row.count, 0);
-  return { rows, total };
+    }),
+    sbRpc<number | string | null>(env, "offchain_total", {}),
+  ]);
+  return {
+    rows: dailyRows.map((row) => ({
+      day: asDay(row.day),
+      count: asCount(row.count),
+    })),
+    total: asCount(total),
+  };
 }
 
 export async function readOffchainWallets(

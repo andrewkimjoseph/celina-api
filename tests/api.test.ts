@@ -155,14 +155,19 @@ describe("GET /offchain/*", () => {
   it("GET /offchain/daily aggregates rows", async () => {
     const fetchMock = async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
-      expect(url).toBe("https://example.supabase.co/rest/v1/rpc/offchain_daily");
       expect(init?.method).toBe("POST");
-      const body = JSON.parse(String(init?.body ?? "{}")) as { since_day: string };
-      expect(body.since_day).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      return jsonResponse([
-        { day: "2026-09-01", count: 2 },
-        { day: "2026-09-02", count: 3 },
-      ]);
+      if (url.endsWith("/rest/v1/rpc/offchain_daily")) {
+        const body = JSON.parse(String(init?.body ?? "{}")) as { since_day: string };
+        expect(body.since_day).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        return jsonResponse([
+          { day: "2026-09-01", count: 2 },
+          { day: "2026-09-02", count: 3 },
+        ]);
+      }
+      if (url.endsWith("/rest/v1/rpc/offchain_total")) {
+        return jsonResponse(12);
+      }
+      throw new Error(`unexpected fetch ${url}`);
     };
     const original = globalThis.fetch;
     globalThis.fetch = fetchMock as typeof fetch;
@@ -174,7 +179,7 @@ describe("GET /offchain/*", () => {
           { day: "2026-09-01", count: 2 },
           { day: "2026-09-02", count: 3 },
         ],
-        total: 5,
+        total: 12,
       });
     } finally {
       globalThis.fetch = original;
