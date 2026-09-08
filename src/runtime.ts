@@ -2,6 +2,29 @@ import { createCelinaClient, DEFAULT_RPC_URL } from "@andrewkimjoseph/celina-sdk
 import type { ToolRuntime, WalletInput } from "@andrewkimjoseph/celina-sdk/tools";
 import type { ApiEnv } from "./env.js";
 
+/** Amplitude `device_id` when `X-Celina-Client` is absent or invalid. */
+export const DEFAULT_ANALYTICS_DEVICE_ID = "celina_api";
+
+const MAX_DEVICE_ID_LENGTH = 40;
+
+/**
+ * Sanitize a caller-supplied Amplitude device id.
+ * Lowercases, maps non `[a-z0-9_]` to `_`, caps length, falls back to `celina_api`.
+ */
+export function sanitizeClientDeviceId(raw?: string | null): string {
+  if (raw == null) {
+    return DEFAULT_ANALYTICS_DEVICE_ID;
+  }
+  const sanitized = raw
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, MAX_DEVICE_ID_LENGTH)
+    .replace(/_+$/g, "");
+  return sanitized.length > 0 ? sanitized : DEFAULT_ANALYTICS_DEVICE_ID;
+}
+
 function unavailableSelf(): never {
   throw new Error("This Self tool is not available on the read-only Celina API.");
 }
@@ -16,12 +39,15 @@ function resolveWallet(input?: WalletInput): `0x${string}` {
   );
 }
 
-export function createApiRuntime(env: ApiEnv = {}): ToolRuntime {
+export function createApiRuntime(
+  env: ApiEnv = {},
+  analyticsDeviceId: string = DEFAULT_ANALYTICS_DEVICE_ID,
+): ToolRuntime {
   const celina = createCelinaClient({
     rpcUrl: env.CELO_RPC_URL || DEFAULT_RPC_URL,
     ethRpcUrl: env.ETH_RPC_URL_MAINNET,
     analyticsEnabled: true,
-    analyticsDeviceId: "celina_api",
+    analyticsDeviceId: sanitizeClientDeviceId(analyticsDeviceId),
   });
 
   return {

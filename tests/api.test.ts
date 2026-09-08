@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { createApp } from "../src/app.js";
 import { getPublicReadToolNames } from "../src/catalog.js";
+import {
+  DEFAULT_ANALYTICS_DEVICE_ID,
+  sanitizeClientDeviceId,
+} from "../src/runtime.js";
 
 const excluded = [
   "send_token",
@@ -95,5 +99,40 @@ describe("HTTP surface", () => {
     const body = (await res.json()) as Record<string, unknown>;
     expect(body).toBeTypeOf("object");
     expect(body).not.toHaveProperty("error");
+  });
+
+  it("POST get_network_status accepts X-Celina-Client", async () => {
+    const res = await app.request("/v1/get_network_status", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Celina-Client": "celina_bot",
+      },
+      body: JSON.stringify({}),
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as Record<string, unknown>;
+    expect(body).toBeTypeOf("object");
+    expect(body).not.toHaveProperty("error");
+  });
+});
+
+describe("sanitizeClientDeviceId", () => {
+  it("defaults when absent or empty", () => {
+    expect(sanitizeClientDeviceId(undefined)).toBe(DEFAULT_ANALYTICS_DEVICE_ID);
+    expect(sanitizeClientDeviceId(null)).toBe(DEFAULT_ANALYTICS_DEVICE_ID);
+    expect(sanitizeClientDeviceId("")).toBe(DEFAULT_ANALYTICS_DEVICE_ID);
+    expect(sanitizeClientDeviceId("   ")).toBe(DEFAULT_ANALYTICS_DEVICE_ID);
+    expect(sanitizeClientDeviceId("---")).toBe(DEFAULT_ANALYTICS_DEVICE_ID);
+  });
+
+  it("keeps underscore-style ids and maps hyphens", () => {
+    expect(sanitizeClientDeviceId("celina_bot")).toBe("celina_bot");
+    expect(sanitizeClientDeviceId("celina-bot")).toBe("celina_bot");
+    expect(sanitizeClientDeviceId("Celina_Bot")).toBe("celina_bot");
+  });
+
+  it("caps length at 40 characters", () => {
+    expect(sanitizeClientDeviceId("a".repeat(50))).toBe("a".repeat(40));
   });
 });

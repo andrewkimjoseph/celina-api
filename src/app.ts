@@ -4,26 +4,27 @@ import { drainCelinaAnalytics } from "@andrewkimjoseph/celina-sdk";
 import type { ToolRuntime } from "@andrewkimjoseph/celina-sdk/tools";
 import { getPublicReadTool, getPublicReadToolDefinitions } from "./catalog.js";
 import type { ApiEnv } from "./env.js";
-import { createApiRuntime } from "./runtime.js";
+import { createApiRuntime, sanitizeClientDeviceId } from "./runtime.js";
 import { toJsonSafe } from "./serialize.js";
 import { toolPublicMetadata } from "./tool-metadata.js";
 
 type AppBindings = { Bindings: ApiEnv };
 
-let cachedRuntime: ToolRuntime | undefined;
-let cachedRuntimeKey: string | undefined;
+const runtimes = new Map<string, ToolRuntime>();
 
-function runtimeKey(env: ApiEnv): string {
-  return `${env.CELO_RPC_URL ?? ""}|${env.ETH_RPC_URL_MAINNET ?? ""}`;
+function runtimeKey(env: ApiEnv, analyticsDeviceId: string): string {
+  return `${env.CELO_RPC_URL ?? ""}|${env.ETH_RPC_URL_MAINNET ?? ""}|${analyticsDeviceId}`;
 }
 
-function getRuntime(env: ApiEnv): ToolRuntime {
-  const key = runtimeKey(env);
-  if (!cachedRuntime || cachedRuntimeKey !== key) {
-    cachedRuntime = createApiRuntime(env);
-    cachedRuntimeKey = key;
+function getRuntime(env: ApiEnv, analyticsDeviceId: string): ToolRuntime {
+  const key = runtimeKey(env, analyticsDeviceId);
+  const cached = runtimes.get(key);
+  if (cached) {
+    return cached;
   }
-  return cachedRuntime;
+  const created = createApiRuntime(env, analyticsDeviceId);
+  runtimes.set(key, created);
+  return created;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -118,8 +119,12 @@ export function createApp(options?: {
       );
     }
 
+    const analyticsDeviceId = sanitizeClientDeviceId(
+      c.req.header("x-celina-client"),
+    );
     const runtime =
-      options?.runtime ?? getRuntime({ ...options?.env, ...c.env });
+      options?.runtime ??
+      getRuntime({ ...options?.env, ...c.env }, analyticsDeviceId);
 
     try {
       const result = await definition.handler(
