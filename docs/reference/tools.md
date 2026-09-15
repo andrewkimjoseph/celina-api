@@ -101,7 +101,7 @@ Balances for named registry tokens on Celo mainnet. Default tokens: CELO + USDm.
 
 Get Stablecoin Balances
 
-Scan fiat-pegged registry stablecoins (Mento *m, USDT, USDC, etc.) for an address in one call. Omits zero balances by default. Excludes GoodDollar (G$) and WETH — use get_token_balance or GoodDollar tools for those. Reads on-chain balances for the given address only; GoodDollar connected-wallet identity is not resolved.
+Scan fiat-pegged registry stablecoins (Mento *m, USDT, USDC, USAT, etc.) for an address in one call. Omits zero balances by default. Excludes GoodDollar (G$) and WETH — use get_token_balance or GoodDollar tools for those. Reads on-chain balances for the given address only; GoodDollar connected-wallet identity is not resolved.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -117,7 +117,7 @@ Registry token metadata (symbol, address, decimals). Does not read balances.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `token` | string | yes | Celo mainnet token symbol (e.g. CELO, USDm, USDC, USDT) |
+| `token` | string | yes | Celo mainnet token symbol (e.g. CELO, USDm, USDC, USDT, USAT) |
 
 ## `get_token_balance`
 
@@ -127,7 +127,7 @@ Balance for one registry token. Pass a symbol or known registry contract address
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `token` | string | yes | Celo mainnet token symbol (e.g. CELO, USDm, USDC, USDT) |
+| `token` | string | yes | Celo mainnet token symbol (e.g. CELO, USDm, USDC, USDT, USAT) |
 | `address` | string | yes | Wallet on Celo mainnet (0x address). |
 
 ## `get_gas_fee_data`
@@ -159,8 +159,8 @@ Uniswap v4 AMM quote for a token pair on Celo mainnet.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `token_in` | string | yes | Celo mainnet token symbol (e.g. CELO, USDm, USDC, USDT) |
-| `token_out` | string | yes | Celo mainnet token symbol (e.g. CELO, USDm, USDC, USDT) |
+| `token_in` | string | yes | Celo mainnet token symbol (e.g. CELO, USDm, USDC, USDT, USAT) |
+| `token_out` | string | yes | Celo mainnet token symbol (e.g. CELO, USDm, USDC, USDT, USAT) |
 | `amount` | string | yes | Human-readable amount of token_in |
 | `from` | string | no | Wallet on Celo mainnet. Omit to use the connected wallet or the configured MCP signer (CELO or Self agent). |
 
