@@ -32,7 +32,7 @@ The Celina ecosystem device-id table (`celina-*` packages plus celeste-ai) lives
 
 ## Delivery
 
-Tracking is fire-and-forget so it does not add latency to the tool response. The Worker keeps the isolate alive with `waitUntil(drainCelinaAnalytics())` after each successful or failed `POST /v1/:name`.
+Tracking is fire-and-forget so it does not add latency to the tool response. After each successful or failed `POST /v1/:name`, the Worker keeps the isolate alive with `waitUntil(drainCelinaAnalytics())`. If there is no ExecutionContext (tests, some local adapters), drain is awaited on the request path instead.
 
 ## Off-chain stats
 

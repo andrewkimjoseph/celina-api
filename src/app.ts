@@ -184,11 +184,6 @@ export function createApp(options?: {
         runtime,
         parsed.data as Record<string, unknown>,
       );
-      try {
-        c.executionCtx.waitUntil(drainCelinaAnalytics());
-      } catch {
-        // app.request() in tests has no Worker ExecutionContext
-      }
       return c.json(toJsonSafe(result));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -197,6 +192,13 @@ export function createApp(options?: {
           message,
         );
       return c.json({ error: message }, clientError ? 400 : 502);
+    } finally {
+      const draining = Promise.resolve().then(() => drainCelinaAnalytics());
+      try {
+        c.executionCtx.waitUntil(draining);
+      } catch {
+        await draining;
+      }
     }
   });
 

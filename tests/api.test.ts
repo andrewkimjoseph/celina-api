@@ -35,6 +35,28 @@ describe("public read catalog", () => {
   });
 });
 
+function interceptStatsEvents(): {
+  events: Array<Record<string, unknown>>;
+  restore: () => void;
+} {
+  const events: Array<Record<string, unknown>> = [];
+  const original = globalThis.fetch;
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/events") && (init?.method ?? "").toUpperCase() === "POST") {
+      events.push(JSON.parse(String(init?.body ?? "{}")));
+      return new Response(null, { status: 200 });
+    }
+    return original.call(globalThis, input, init);
+  }) as typeof fetch;
+  return {
+    events,
+    restore: () => {
+      globalThis.fetch = original;
+    },
+  };
+}
+
 describe("HTTP surface", () => {
   const app = createApp();
 
@@ -90,30 +112,48 @@ describe("HTTP surface", () => {
   });
 
   it("POST get_network_status returns chain data", async () => {
-    const res = await app.request("/v1/get_network_status", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    });
-    expect(res.status).toBe(200);
-    const body = (await res.json()) as Record<string, unknown>;
-    expect(body).toBeTypeOf("object");
-    expect(body).not.toHaveProperty("error");
+    const { restore } = interceptStatsEvents();
+    try {
+      const res = await app.request("/v1/get_network_status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as Record<string, unknown>;
+      expect(body).toBeTypeOf("object");
+      expect(body).not.toHaveProperty("error");
+    } finally {
+      restore();
+    }
   });
 
-  it("POST get_network_status accepts X-Celina-Client", async () => {
-    const res = await app.request("/v1/get_network_status", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Celina-Client": "celina_bot",
-      },
-      body: JSON.stringify({}),
-    });
-    expect(res.status).toBe(200);
-    const body = (await res.json()) as Record<string, unknown>;
-    expect(body).toBeTypeOf("object");
-    expect(body).not.toHaveProperty("error");
+  it("POST get_network_status reports X-Celina-Client as deviceId", async () => {
+    const { events, restore } = interceptStatsEvents();
+    try {
+      const res = await app.request("/v1/get_network_status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Celina-Client": "celina_bot",
+        },
+        body: JSON.stringify({}),
+      });
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as Record<string, unknown>;
+      expect(body).toBeTypeOf("object");
+      expect(body).not.toHaveProperty("error");
+      expect(events).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            event: "get_network_status",
+            deviceId: "celina_bot",
+          }),
+        ]),
+      );
+    } finally {
+      restore();
+    }
   });
 });
 
