@@ -271,6 +271,26 @@ describe("GET /offchain/*", () => {
     }
   });
 
+  it("GET /offchain/projects returns per-project counts", async () => {
+    const fetchMock = async (input: RequestInfo | URL) => {
+      expect(String(input)).toBe(
+        "https://example.supabase.co/rest/v1/rpc/offchain_projects",
+      );
+      return jsonResponse([{ project: "goclaim_app", count: 9 }]);
+    };
+    const original = globalThis.fetch;
+    globalThis.fetch = fetchMock as typeof fetch;
+    try {
+      const res = await app.request("/offchain/projects");
+      expect(res.status).toBe(200);
+      await expect(res.json()).resolves.toEqual({
+        rows: [{ project: "goclaim_app", count: 9 }],
+      });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
   it("GET /offchain/devices returns uniqueDevices", async () => {
     const fetchMock = async (input: RequestInfo | URL) => {
       expect(String(input)).toBe(

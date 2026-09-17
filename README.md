@@ -31,6 +31,7 @@ Read invocations report usage to [celina-stats-api](https://api.stats.usecelina.
 | GET | `/offchain/daily` | `{ rows: [{ day, count }], total }` — daily counts (90 days); `total` all-time |
 | GET | `/offchain/wallets` | `{ daily: [{ day, count }], total }` — distinct `0x` wallets (90 days) |
 | GET | `/offchain/tools` | `{ rows: [{ event, count }] }` — per-tool counts (90 days) |
+| GET | `/offchain/projects` | `{ rows: [{ project, count }] }` — per-project counts (90 days) |
 | GET | `/offchain/devices` | `{ uniqueDevices }` — distinct `device_id` (90 days) |
 | GET | `/offchain/sync` | `{ lastSyncedAt }` — Amplitude export cursor |
 | GET | `/v1/tools` | List tools |

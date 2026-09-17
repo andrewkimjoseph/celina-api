@@ -13,6 +13,11 @@ export type OffchainToolCount = {
   count: number;
 };
 
+export type OffchainProjectCount = {
+  project: string;
+  count: number;
+};
+
 type RpcDayRow = { day: string; count: number | string };
 type RpcToolRow = { event: string; count: number | string };
 
@@ -74,6 +79,19 @@ export async function readOffchainTools(
       since_day: sinceDay(),
     })
   ).map((row) => ({ event: row.event, count: asCount(row.count) }));
+  return { rows };
+}
+
+export async function readOffchainProjects(
+  env: ApiEnv,
+): Promise<{ rows: OffchainProjectCount[] }> {
+  const rows = (
+    await sbRpc<Array<{ project: string; count: number | string }>>(
+      env,
+      "offchain_projects",
+      { since_day: sinceDay() },
+    )
+  ).map((row) => ({ project: row.project, count: asCount(row.count) }));
   return { rows };
 }
 

@@ -9,6 +9,7 @@ Base URL: see [Base URL](../getting-started/base-url.md).
 | GET | `/offchain/daily` | `{ rows: [{ day, count }], total }` — `rows` last 90 days; `total` all-time |
 | GET | `/offchain/wallets` | `{ daily: [{ day, count }], total }` |
 | GET | `/offchain/tools` | `{ rows: [{ event, count }] }` |
+| GET | `/offchain/projects` | `{ rows: [{ project, count }] }` |
 | GET | `/offchain/devices` | `{ uniqueDevices }` |
 | GET | `/offchain/sync` | `{ lastSyncedAt }` |
 | GET | `/v1/tools` | `{ count, tools: [{ name, title, description, inputs }] }` |
@@ -19,7 +20,7 @@ Base URL: see [Base URL](../getting-started/base-url.md).
 
 Unknown `:name` → **404**. Validation errors → **400**. Execution failures (including off-chain stats when Supabase is unavailable) → **502**. See [Errors](../getting-started/errors.md).
 
-`GET /offchain/*` aggregates ingested read-telemetry. Daily rows, wallets, tools, and devices use the last **90 days**; `/offchain/daily` `total` is all-time. They are not tool invocations — see [Telemetry](../guides/telemetry.md#off-chain-stats).
+`GET /offchain/*` aggregates ingested read-telemetry. Daily rows, wallets, tools, projects, and devices use the last **90 days**; `/offchain/daily` `total` is all-time. They are not tool invocations — see [Telemetry](../guides/telemetry.md#off-chain-stats).
 
 ## Headers
 

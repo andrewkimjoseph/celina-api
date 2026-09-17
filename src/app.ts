@@ -8,6 +8,7 @@ import {
   offchainErrorMessage,
   readOffchainDaily,
   readOffchainDevices,
+  readOffchainProjects,
   readOffchainSync,
   readOffchainTools,
   readOffchainWallets,
@@ -97,6 +98,14 @@ export function createApp(options?: {
   app.get("/offchain/tools", async (c) => {
     try {
       return c.json(await readOffchainTools(envFor(c)));
+    } catch (error) {
+      return c.json({ error: offchainErrorMessage(error) }, 502);
+    }
+  });
+
+  app.get("/offchain/projects", async (c) => {
+    try {
+      return c.json(await readOffchainProjects(envFor(c)));
     } catch (error) {
       return c.json({ error: offchainErrorMessage(error) }, 502);
     }
