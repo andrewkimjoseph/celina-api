@@ -2,7 +2,7 @@
 
 Generated from the Celina SDK catalog with the public read-only filter (`families: ["read"]`, no server keys, no Self sessions, no `estimate_*`). Re-run `npm run docs:tools` after bumping `@andrewkimjoseph/celina-sdk`.
 
-Currently **48** tools. Live list: `GET /v1/tools`. Invoke with `POST /v1/<name>` using snake_case JSON keys.
+Currently **50** tools. Live list: `GET /v1/tools`. Invoke with `POST /v1/<name>` using snake_case JSON keys.
 
 ## `get_network_status`
 
@@ -138,6 +138,16 @@ Returns current gas fee data including EIP-1559 fees on mainnet.
 
 No input fields. Send `{}` or an empty JSON object.
 
+## `get_mento_swap_pairs`
+
+Get Mento Swap Pairs
+
+List tradable Mento FX registry-token pairs on Celo mainnet. Call this before listing Mento pairs — do not invent them.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `token` | string | no | Optional registry token. When set, only pairs involving this token are returned. |
+
 ## `get_mento_fx_quote`
 
 Get Mento FX Quote
@@ -150,6 +160,16 @@ Mento FX oracle quote for a token pair on mainnet. Read-only.
 | `token_out` | string | yes | Output token symbol or address |
 | `amount` | string | yes | Human-readable amount of token_in, e.g. 100 |
 | `from` | string | no | Wallet on Celo mainnet. Omit to use the connected wallet or the configured MCP signer (CELO or Self agent). |
+
+## `get_uniswap_swap_pairs`
+
+Get Uniswap Swap Pairs
+
+List Uniswap v4 registry-token pairs on Celo mainnet (direct pools and 2-hop routes). Call this before listing Uniswap pairs — do not invent them.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `token` | string | no | Optional registry token. When set, only pairs involving this token are returned. |
 
 ## `get_uniswap_quote`
 
