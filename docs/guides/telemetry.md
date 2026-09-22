@@ -1,6 +1,6 @@
-# Telemetry (celina-stats-api)
+# Telemetry (Amplitude)
 
-Successful **read** `POST /v1/:name` invocations are reported to [celina-stats-api](https://api.stats.usecelina.xyz) (`POST /events`) via the bundled [Celina SDK](https://github.com/andrewkimjoseph/celina-sdk) — not Amplitude-direct.
+Successful **read** `POST /v1/:name` invocations are reported to Amplitude via the bundled [Celina SDK](https://github.com/andrewkimjoseph/celina-sdk). [celina-stats-api](https://api.stats.usecelina.xyz) copies those events in on its daily export cron.
 
 The event name is the catalog tool name (for example `get_stablecoin_balances`, `verify_self_agent`).
 
@@ -36,10 +36,9 @@ Tracking is fire-and-forget so it does not add latency to the tool response. Aft
 
 ## Off-chain stats
 
-Dashboard aggregates and the call list live on [celina-stats-api](https://api.stats.usecelina.xyz) (`GET /offchain/*`), computed from already-ingested events in `amplitude_events`. This API does not query Supabase.
-
-Ingest still belongs to celina-stats-api: SDK `POST /events` plus the daily Amplitude export cron.
+Dashboard aggregates and the call list live on [celina-stats-api](https://api.stats.usecelina.xyz) (`GET /offchain/*`), computed from `amplitude_events` after the daily Amplitude export. This API does not query Supabase. Those reads require `Authorization: Bearer $STATS_READ_KEY`.
 
 ```bash
-curl -sS https://api.stats.usecelina.xyz/offchain/daily
+curl -sS https://api.stats.usecelina.xyz/offchain/daily \
+  -H "Authorization: Bearer $STATS_READ_KEY"
 ```

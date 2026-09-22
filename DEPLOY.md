@@ -47,7 +47,7 @@ curl -sS https://api.usecelina.xyz/v1/get_network_status \
   -d '{}'
 ```
 
-Expected: `{ "ok": true, "service": "celina-api" }` and a JSON object with `chainId: 42220`. Off-chain dashboard smoke tests live on celina-stats-api (`https://api.stats.usecelina.xyz/offchain/daily`).
+Expected: `{ "ok": true, "service": "celina-api" }` and a JSON object with `chainId: 42220`. Off-chain dashboard smoke tests live on celina-stats-api (`GET /offchain/daily` with `Authorization: Bearer $STATS_READ_KEY`).
 
 ## Invoke tools (reminder)
 
