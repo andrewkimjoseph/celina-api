@@ -36,19 +36,10 @@ Tracking is fire-and-forget so it does not add latency to the tool response. Aft
 
 ## Off-chain stats
 
-`GET /offchain/*` are **read-aggregates** over already-ingested events in `amplitude_events`. Daily / wallets / tools / projects / devices use a **90-day window**. `GET /offchain/daily` `total` is **all-time** (`COUNT(*)` on `amplitude_events`), not the sum of the 90-day rows. They are not tool invocations and do not emit telemetry.
+Dashboard aggregates and the call list live on [celina-stats-api](https://api.stats.usecelina.xyz) (`GET /offchain/*`), computed from already-ingested events in `amplitude_events`. This API does not query Supabase.
 
-Ingest still belongs to [celina-stats-api](https://github.com/andrewkimjoseph/celina-stats-api): SDK `POST /events` plus the daily Amplitude export cron. This API only queries the same Supabase project.
-
-| Method | Path | Body |
-|--------|------|------|
-| GET | `/offchain/daily` | `{ rows: [{ day, count }], total }` — `rows` last 90 days; `total` all-time |
-| GET | `/offchain/wallets` | `{ daily: [{ day, count }], total }` — distinct valid `0x` `user_id` |
-| GET | `/offchain/tools` | `{ rows: [{ event, count }] }` |
-| GET | `/offchain/projects` | `{ rows: [{ project, count }] }` — snake_case `device_id` projects (90 days); excludes SDK; MCP installs collapse to `andrewkimjoseph_celina_mcp` |
-| GET | `/offchain/devices` | `{ uniqueDevices }` — excludes empty ids and `celina-sdk` / `andrewkimjoseph_celina_sdk` |
-| GET | `/offchain/sync` | `{ lastSyncedAt }` — Amplitude export cursor |
+Ingest still belongs to celina-stats-api: SDK `POST /events` plus the daily Amplitude export cron.
 
 ```bash
-curl -sS https://api.usecelina.xyz/offchain/daily
+curl -sS https://api.stats.usecelina.xyz/offchain/daily
 ```

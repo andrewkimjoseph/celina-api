@@ -24,8 +24,6 @@ Set in the Cloudflare dashboard (**Workers & Pages → celina-api → Settings �
 |----------|----------|-------|
 | `CELO_RPC_URL` | Optional | Celo mainnet RPC (default: Forno) |
 | `ETH_RPC_URL_MAINNET` | Optional | Ethereum RPC for ENS |
-| `SUPABASE_URL` | Yes for `GET /offchain/*` | Same stats Supabase project as celina-stats-api |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes for `GET /offchain/*` | Service role — never expose to browsers |
 
 Do **not** set `CELO_PRIVATE_KEY` or `SELF_AGENT_PRIVATE_KEY`. This Worker is read-only.
 
@@ -44,14 +42,12 @@ Suggested production host: **https://api.usecelina.xyz**
 ```bash
 curl -sS https://api.usecelina.xyz/health
 
-curl -sS https://api.usecelina.xyz/offchain/daily
-
 curl -sS https://api.usecelina.xyz/v1/get_network_status \
   -H 'Content-Type: application/json' \
   -d '{}'
 ```
 
-Expected: `{ "ok": true, "service": "celina-api" }`, a JSON object with `rows`/`total` from `/offchain/daily`, and a JSON object with `chainId: 42220`.
+Expected: `{ "ok": true, "service": "celina-api" }` and a JSON object with `chainId: 42220`. Off-chain dashboard smoke tests live on celina-stats-api (`https://api.stats.usecelina.xyz/offchain/daily`).
 
 ## Invoke tools (reminder)
 
@@ -70,5 +66,4 @@ curl -sS https://api.usecelina.xyz/v1/get_latest_blocks \
 
 - **Worker fails to start after deploy** — ensure `@andrewkimjoseph/celina-sdk` is ≥ 0.25.7 (Worker-safe bundles; no `createRequire`).
 - **502 on tool calls** — check RPC URL and Cloudflare Worker logs (Observability).
-- **502 on `GET /offchain/*`** — set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the dashboard (same project as celina-stats-api).
 - **Bundle size** — large SDK deps; stay on published npm SDK, not `file:` links.
