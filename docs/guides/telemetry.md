@@ -1,6 +1,6 @@
 # Telemetry (Amplitude)
 
-Successful **read** `POST /v1/:name` invocations are reported to Amplitude via the bundled [Celina SDK](https://github.com/andrewkimjoseph/celina-sdk). [celina-stats-api](https://api.stats.usecelina.xyz) copies those events in on its daily export cron.
+Successful **read** `POST /v1/:name` invocations are reported through the bundled [Celina SDK](https://github.com/andrewkimjoseph/celina-sdk) to [celina-stats-api](https://api.stats.usecelina.xyz) `POST /telemetry`. That Worker holds the Amplitude write key and forwards one event. The daily export cron copies those events into the stats store.
 
 The event name is the catalog tool name (for example `get_stablecoin_balances`, `verify_self_agent`).
 

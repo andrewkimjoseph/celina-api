@@ -21,7 +21,7 @@ Suggested production host: `https://api.usecelina.xyz`
 
 ## Telemetry
 
-Read invocations report usage to Amplitude via the SDK. [celina-stats-api](https://api.stats.usecelina.xyz) copies those events in on its daily export cron. Default `device_id` is `celina_api`. Pass `X-Celina-Client` to override it (sanitized, max 40 characters) — this is how celina-bot appears as `celina_bot`. Off-chain dashboard aggregates and the call list are `GET /offchain/*` on celina-stats-api (bearer token required). See [Telemetry](docs/guides/telemetry.md).
+Read invocations report usage through the SDK to [celina-stats-api](https://api.stats.usecelina.xyz) `POST /telemetry`, which forwards them to Amplitude. The daily export cron copies those events into the stats store. Default `device_id` is `celina_api`. Pass `X-Celina-Client` to override it (sanitized, max 40 characters) — this is how celina-bot appears as `celina_bot`. Off-chain dashboard aggregates and the call list are `GET /offchain/*` on celina-stats-api (bearer token required). See [Telemetry](docs/guides/telemetry.md).
 
 ## Endpoints
 
