@@ -46,7 +46,6 @@ export function createApiRuntime(
   const celina = createCelinaClient({
     rpcUrl: env.CELO_RPC_URL || DEFAULT_RPC_URL,
     ethRpcUrl: env.ETH_RPC_URL_MAINNET,
-    analyticsEnabled: true,
     analyticsDeviceId: sanitizeClientDeviceId(analyticsDeviceId),
   });
 
