@@ -43,7 +43,10 @@ function interceptStatsEvents(): {
   const original = globalThis.fetch;
   globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
-    if (url.endsWith("/events") && (init?.method ?? "").toUpperCase() === "POST") {
+    if (
+      (url.endsWith("/events") || url.endsWith("/telemetry")) &&
+      (init?.method ?? "").toUpperCase() === "POST"
+    ) {
       events.push(JSON.parse(String(init?.body ?? "{}")));
       return new Response(null, { status: 200 });
     }
@@ -60,13 +63,41 @@ function interceptStatsEvents(): {
 describe("HTTP surface", () => {
   const app = createApp();
 
-  it("GET /health", async () => {
-    const res = await app.request("/health");
-    expect(res.status).toBe(200);
-    await expect(res.json()).resolves.toEqual({
-      ok: true,
-      service: "celina-api",
-    });
+  it("GET /health reports RPC checks", async () => {
+    const original = globalThis.fetch;
+    globalThis.fetch = (async () => new Response("ok", { status: 200 })) as typeof fetch;
+    try {
+      const res = await app.request(
+        "/health",
+        {},
+        {
+          CELO_RPC_URL: "https://celo.example",
+          ETH_RPC_URL_MAINNET: "https://eth.example",
+        },
+      );
+      expect(res.status).toBe(200);
+      await expect(res.json()).resolves.toEqual({
+        ok: true,
+        service: "celina-api",
+        checks: { celoRpc: true, ethRpc: true },
+      });
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("GET /health is 503 when an RPC check fails", async () => {
+    const original = globalThis.fetch;
+    globalThis.fetch = (async () => new Response("no", { status: 503 })) as typeof fetch;
+    try {
+      const res = await app.request("/health", {}, { CELO_RPC_URL: "https://celo.example" });
+      expect(res.status).toBe(503);
+      const body = (await res.json()) as { ok: boolean; checks: { celoRpc: boolean } };
+      expect(body.ok).toBe(false);
+      expect(body.checks.celoRpc).toBe(false);
+    } finally {
+      globalThis.fetch = original;
+    }
   });
 
   it("GET /v1/tools lists snake_case names only", async () => {
@@ -146,8 +177,8 @@ describe("HTTP surface", () => {
       expect(events).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            event: "get_network_status",
-            deviceId: "celina_bot",
+            event_type: "get_network_status",
+            device_id: "celina_bot",
           }),
         ]),
       );

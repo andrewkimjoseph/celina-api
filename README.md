@@ -27,7 +27,7 @@ Read invocations report usage through the SDK to [celina-stats-api](https://api.
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| GET | `/health` | `{ ok, service: "celina-api" }` |
+| GET | `/health` | `{ ok, service, checks: { celoRpc, ethRpc } }` — 503 if a configured RPC check fails |
 | GET | `/v1/tools` | List tools |
 | GET | `/v1/:name` | One tool metadata |
 | POST | `/v1/:name` | Invoke a read tool |
@@ -53,7 +53,7 @@ Requires Node.js ≥ 20. Depends on published `@andrewkimjoseph/celina-sdk` (exa
 
 ## Deploy
 
-Git-connected Cloudflare Workers Builds — see **[DEPLOY.md](DEPLOY.md)** for dashboard variables, custom domain, and smoke tests. Do not `wrangler deploy` from a different Cloudflare account.
+`npx wrangler deploy` — see **[DEPLOY.md](DEPLOY.md)** for secrets, custom domain, and smoke tests. `account_id` in `wrangler.jsonc` pins the CELINA account. If Wrangler reports an account error, delete `node_modules/.cache/wrangler/wrangler-account.json` and retry.
 
 ## Docs for GitBook
 

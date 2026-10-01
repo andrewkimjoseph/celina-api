@@ -1,6 +1,12 @@
 # Deploy — Celina API (Cloudflare Workers)
 
-Git-connected Cloudflare Workers Builds deploy this repo. Do **not** run `wrangler deploy` / `wrangler secret put` from a machine whose Wrangler CLI is tied to a different Cloudflare account.
+Deploy with the Wrangler CLI. [`wrangler.jsonc`](wrangler.jsonc) pins `account_id` to the CELINA Cloudflare account, so `wrangler deploy` and `wrangler secret put` target that account.
+
+```bash
+npx wrangler deploy
+```
+
+If Wrangler reports an authentication or account error, delete `node_modules/.cache/wrangler/wrangler-account.json` in this repo and retry. That file can keep a previous login's account after you switch accounts.
 
 ## Prerequisites
 
@@ -18,7 +24,7 @@ npm run dev                 # optional — http://localhost:8788
 
 ## Environment variables
 
-Set in the Cloudflare dashboard (**Workers & Pages → celina-api → Settings → Variables and Secrets**).
+Set with Wrangler (`npx wrangler secret put NAME`), reading the value from `.dev.vars` or `.env.local`. Do not commit those files.
 
 | Variable | Required | Notes |
 |----------|----------|-------|
@@ -33,9 +39,7 @@ Wrangler loads `.dev.vars` automatically for `npm run dev`.
 
 Suggested production host: **https://api.usecelina.xyz**
 
-1. Open the Worker in the Cloudflare dashboard
-2. **Settings → Domains & Routes → Add Custom Domain**
-3. Enter `api.usecelina.xyz`
+Attach `api.usecelina.xyz` as a custom domain on the Worker (dashboard: Settings → Domains & Routes), or add a `routes` entry with `"custom_domain": true` in [`wrangler.jsonc`](wrangler.jsonc) and deploy.
 
 ## Smoke test
 
@@ -47,7 +51,7 @@ curl -sS https://api.usecelina.xyz/v1/get_network_status \
   -d '{}'
 ```
 
-Expected: `{ "ok": true, "service": "celina-api" }` and a JSON object with `chainId: 42220`. Off-chain dashboard smoke tests live on celina-stats-api (`GET /offchain/daily` with `Authorization: Bearer $STATS_READ_KEY`).
+Expected: `{ "ok": true, "service": "celina-api", "checks": { "celoRpc": true, "ethRpc": true } }` (HTTP 503 when a configured RPC check fails) and a JSON object with `chainId: 42220`. Off-chain dashboard smoke tests live on celina-stats-api (`GET /offchain/daily` with `Authorization: Bearer $STATS_READ_KEY`).
 
 ## Invoke tools (reminder)
 
