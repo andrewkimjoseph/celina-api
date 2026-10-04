@@ -4,7 +4,7 @@ import { drainCelinaAnalytics } from "@andrewkimjoseph/celina-sdk";
 import type { ToolRuntime } from "@andrewkimjoseph/celina-sdk/tools";
 import { getPublicReadTool, getPublicReadToolDefinitions } from "./catalog.js";
 import { DEFAULT_CELO_RPC_URL, type ApiEnv } from "./env.js";
-import { checkUrl, rpcChainIdInit } from "./health-check.js";
+import { checkUrl, ETH_HEALTH_TIMEOUT_MS, rpcChainIdInit } from "./health-check.js";
 import { createApiRuntime, sanitizeClientDeviceId } from "./runtime.js";
 import { toJsonSafe } from "./serialize.js";
 import { toolPublicMetadata } from "./tool-metadata.js";
@@ -70,9 +70,11 @@ export function createApp(options?: {
     const ethUrl = env.ETH_RPC_URL_MAINNET?.trim();
     const [celoRpc, ethRpc] = await Promise.all([
       checkUrl(celoUrl, rpcChainIdInit()),
-      ethUrl ? checkUrl(ethUrl, rpcChainIdInit()) : Promise.resolve(true),
+      ethUrl
+        ? checkUrl(ethUrl, rpcChainIdInit(), ETH_HEALTH_TIMEOUT_MS)
+        : Promise.resolve(true),
     ]);
-    const ok = celoRpc && ethRpc;
+    const ok = celoRpc;
     return c.json(
       { ok, service: "celina-api", checks: { celoRpc, ethRpc } },
       ok ? 200 : 503,
