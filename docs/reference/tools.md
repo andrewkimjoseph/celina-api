@@ -211,7 +211,7 @@ Resolve a Celo or Ethereum ENS name to an address. Defaults to Celo coin record 
 
 Get GoodDollar Whitelisting Info
 
-Check GoodDollar IdentityV4 whitelist status for a wallet. Connected wallets resolve to their verified root; returns isWhitelisted, whitelistedRoot, and checkedAddress.
+Check GoodDollar IdentityV4 whitelist status for a wallet. Connected wallets resolve to their verified root; returns isWhitelisted, isWhitelistedRoot, whitelistedRoot, and checkedAddress.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -221,7 +221,7 @@ Check GoodDollar IdentityV4 whitelist status for a wallet. Connected wallets res
 
 Get GoodDollar Identity Link
 
-How a wallet links to GoodDollar IdentityV4: whitelisted root, connected-to root, and live whitelist status.
+How a wallet links to GoodDollar IdentityV4: whitelisted root, whether the address is itself the root (isWhitelistedRoot), connected-to root, and live whitelist status.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -231,7 +231,7 @@ How a wallet links to GoodDollar IdentityV4: whitelisted root, connected-to root
 
 Get GoodDollar UBI Entitlement
 
-Daily GoodDollar UBI claim eligibility: whitelist root, claimable G$, already claimed. Nested identity.isWhitelisted reflects the resolved root.
+Daily GoodDollar UBI claim eligibility: whitelist root, claimable G$, already claimed. isWhitelistedRoot is true when the queried address is the identity root. Nested identity.isWhitelisted and identity.isWhitelistedRoot reflect the resolved root.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -335,7 +335,7 @@ Referendum votes and queue upvotes cast by an address on Celo governance.
 
 Check Humanness
 
-Check whether an address passes humanness on Self Agent ID or GoodDollar IdentityV4. Pass if either rail succeeds.
+Check whether an address passes humanness on Self Agent ID or GoodDollar IdentityV4. Pass if either rail succeeds. The GoodDollar rail returns isWhitelistedRoot when the checked address is itself the identity root.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
