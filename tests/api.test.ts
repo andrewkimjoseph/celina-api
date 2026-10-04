@@ -86,15 +86,51 @@ describe("HTTP surface", () => {
     }
   });
 
-  it("GET /health is 503 when an RPC check fails", async () => {
+  it("GET /health is 503 when the Celo RPC check fails", async () => {
     const original = globalThis.fetch;
-    globalThis.fetch = (async () => new Response("no", { status: 503 })) as typeof fetch;
+    globalThis.fetch = (async (input: RequestInfo | URL) => {
+      const url = String(input);
+      const status = url.includes("eth.example") ? 200 : 503;
+      return new Response(status === 200 ? "ok" : "no", { status });
+    }) as typeof fetch;
     try {
-      const res = await app.request("/health", {}, { CELO_RPC_URL: "https://celo.example" });
+      const res = await app.request(
+        "/health",
+        {},
+        { CELO_RPC_URL: "https://celo.example", ETH_RPC_URL_MAINNET: "https://eth.example" },
+      );
       expect(res.status).toBe(503);
-      const body = (await res.json()) as { ok: boolean; checks: { celoRpc: boolean } };
+      const body = (await res.json()) as {
+        ok: boolean;
+        checks: { celoRpc: boolean; ethRpc: boolean };
+      };
       expect(body.ok).toBe(false);
       expect(body.checks.celoRpc).toBe(false);
+      expect(body.checks.ethRpc).toBe(true);
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("GET /health stays 200 when only the Ethereum RPC check fails", async () => {
+    const original = globalThis.fetch;
+    globalThis.fetch = (async (input: RequestInfo | URL) => {
+      const url = String(input);
+      const status = url.includes("eth.example") ? 503 : 200;
+      return new Response(status === 200 ? "ok" : "no", { status });
+    }) as typeof fetch;
+    try {
+      const res = await app.request(
+        "/health",
+        {},
+        { CELO_RPC_URL: "https://celo.example", ETH_RPC_URL_MAINNET: "https://eth.example" },
+      );
+      expect(res.status).toBe(200);
+      await expect(res.json()).resolves.toEqual({
+        ok: true,
+        service: "celina-api",
+        checks: { celoRpc: true, ethRpc: false },
+      });
     } finally {
       globalThis.fetch = original;
     }

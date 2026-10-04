@@ -27,7 +27,7 @@ Read invocations report usage through the SDK to [celina-stats-api](https://api.
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| GET | `/health` | `{ ok, service, checks: { celoRpc, ethRpc } }` — 503 if a configured RPC check fails |
+| GET | `/health` | `{ ok, service, checks: { celoRpc, ethRpc } }` — 503 if the Celo RPC check fails. A failed Ethereum check stays in `checks.ethRpc` and still returns 200 |
 | GET | `/v1/tools` | List tools |
 | GET | `/v1/:name` | One tool metadata |
 | POST | `/v1/:name` | Invoke a read tool |

@@ -51,7 +51,7 @@ curl -sS https://api.usecelina.xyz/v1/get_network_status \
   -d '{}'
 ```
 
-Expected: `{ "ok": true, "service": "celina-api", "checks": { "celoRpc": true, "ethRpc": true } }` (HTTP 503 when a configured RPC check fails) and a JSON object with `chainId: 42220`. Off-chain dashboard smoke tests live on celina-stats-api (`GET /offchain/daily` with `Authorization: Bearer $STATS_READ_KEY`).
+Expected: `{ "ok": true, "service": "celina-api", "checks": { "celoRpc": true, "ethRpc": true } }` (HTTP 503 when the Celo RPC check fails; a failed Ethereum check still returns 200) and a JSON object with `chainId: 42220`. Off-chain dashboard smoke tests live on celina-stats-api (`GET /offchain/daily` with `Authorization: Bearer $STATS_READ_KEY`).
 
 ## Invoke tools (reminder)
 
