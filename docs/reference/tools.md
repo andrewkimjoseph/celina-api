@@ -165,7 +165,7 @@ Mento FX oracle quote for a token pair on mainnet. Read-only.
 
 Get Uniswap Swap Pairs
 
-List Uniswap v4 registry-token pairs on Celo mainnet (direct pools and 2-hop routes). Call this before listing Uniswap pairs — do not invent them.
+List Uniswap v3 and v4 registry-token pairs on Celo mainnet. Each pair includes venues. v3 covers hub-token pools only. Call this before listing Uniswap pairs — do not invent them.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -175,7 +175,7 @@ List Uniswap v4 registry-token pairs on Celo mainnet (direct pools and 2-hop rou
 
 Get Uniswap Quote
 
-Uniswap v4 AMM quote for a token pair on Celo mainnet.
+Uniswap AMM quote for a token pair on Celo mainnet. Compares v3 and v4 and returns the higher output. protocol is uniswap_v3 or uniswap_v4.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
